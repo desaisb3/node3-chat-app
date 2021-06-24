@@ -11,5 +11,5 @@ https://sanidhyadesai-node-chat-app.herokuapp.com/
 
 To run it locally on your machine:
 Clone the repository
-Run `npm install`
-Run `npm run dev` (which runs from scripts from package.json) and you're all set!
+-  Run `npm install`
+-  Run `npm run dev` (which runs from scripts from package.json) and you're all set!
