@@ -38,8 +38,14 @@ io.on('connection', (socket)=>{
     })
 
     socket.on('disconnect', ()=>{
-        console.log('Client disconnected!')
-        io.emit('message', generateMessage('The user has left'))
+
+        const user = removeUser(socket.id)
+
+        if(user){
+            console.log('Client disconnected!')
+            io.to(user.room).emit('message', generateMessage(`${user.username} has left the chat!`))
+        }
+
     })
 
     socket.on('sendLocation', (location, callback)=>{
@@ -51,11 +57,19 @@ io.on('connection', (socket)=>{
         callback()
     })
 
-    socket.on('join', ( {username, room } ) => {
-        socket.join(room)
+    socket.on('join', ( { username, room }, callback ) => {
+        const {error, user} = addUser({ id: socket.id, username, room })
+
+        if(error){
+            return callback(error)
+        }
+
+        socket.join(user.room)
 
         socket.emit('message', generateMessage('Welcome!'))
-        socket.broadcast.to(room).emit('message', generateMessage(`${username} has joined!`))
+        socket.broadcast.to(user.room).emit('message', generateMessage(`${user.username} has joined!`))
+
+        callback()
 
     })
 
