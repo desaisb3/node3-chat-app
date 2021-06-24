@@ -25,15 +25,18 @@ app.use(express.static(publicDirectoryPath))
 io.on('connection', (socket)=>{
     console.log('New WebSocket Connection')
 
-
     socket.on('sendMessage', (message, callback) => {
+        
+        //Fetching the user information in the current room using getUser
+        const user = getUser(socket.id)
+
         const filter = new Filter()
 
         if (filter.isProfane(message)) {
             return callback('Profanity is not allowed!')
         }
 
-        io.emit('message', generateMessage(message))
+        io.to(user.room).emit('message', generateMessage(user.username,message))
         callback()
     })
 
@@ -43,15 +46,18 @@ io.on('connection', (socket)=>{
 
         if(user){
             console.log('Client disconnected!')
-            io.to(user.room).emit('message', generateMessage(`${user.username} has left the chat!`))
+            io.to(user.room).emit('message', generateMessage('Admin',`${user.username} has left the chat!`))
         }
 
     })
 
     socket.on('sendLocation', (location, callback)=>{
+
+        const user = getUser(socket.id)
+
         //Another way to write/access the variables
         //`Latitude: ${location.latitude}, ${location.longitude}`
-        io.emit('locationMessage', generateLocationMessage(`https://google.com/maps?q=${location.latitude},${location.longitude}`))
+        io.to(user.room).emit('locationMessage', generateLocationMessage(user.username,`https://google.com/maps?q=${location.latitude},${location.longitude}`))
 
         //Sending acknowledgement to the client that the location has been shared
         callback()
@@ -66,8 +72,8 @@ io.on('connection', (socket)=>{
 
         socket.join(user.room)
 
-        socket.emit('message', generateMessage('Welcome!'))
-        socket.broadcast.to(user.room).emit('message', generateMessage(`${user.username} has joined!`))
+        socket.emit('message', generateMessage('Admin','Welcome!'))
+        socket.broadcast.to(user.room).emit('message', generateMessage('Admin',`${user.username} has joined!`))
 
         callback()
 
