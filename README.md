@@ -10,7 +10,8 @@ To check the live version of it, check it out on Heroku:
 https://sanidhyadesai-node-chat-app.herokuapp.com/
 
 To run it locally on your machine:
-Clone the repository
+ 
+-  Clone the repository (https://github.com/desaisb3/node3-chat-app)
 -  Run `npm install`
 -  Run `npm run dev` (which runs from scripts from package.json) and you're all set!
 
