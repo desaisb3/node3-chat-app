@@ -13,3 +13,9 @@ To run it locally on your machine:
 Clone the repository
 -  Run `npm install`
 -  Run `npm run dev` (which runs from scripts from package.json) and you're all set!
+
+To see how it works:
+-  Open multiple browser tabs
+-  Open `localhost:3000`
+-  Enter different usernames and same room names 
+-  Check the output
